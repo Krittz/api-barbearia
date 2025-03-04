@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Barbershop;
+use App\Models\Service;
 use App\Models\User;
 use App\Policies\BarbershopPolicy;
+use App\Policies\ServicePolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Barbershop::class, BarbershopPolicy::class);
+        Gate::policy(Service::class, ServicePolicy::class);
     }
 }

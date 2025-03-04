@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\BarbershopController;
+use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,5 +30,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{barbershop}', [BarbershopController::class, 'show']);
         Route::patch('/{barbershop}', [BarbershopController::class, 'update']);
         Route::delete('/{barbershop}', [BarbershopController::class, 'destroy']);
+    });
+
+    Route::prefix('/services')->group(function () {
+        Route::post('/', [ServiceController::class, 'store']);
     });
 });

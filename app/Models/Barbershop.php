@@ -28,7 +28,6 @@ class Barbershop extends Model
     {
         if ($owner->role !== UserRole::OWNER) {
             throw new InvalidUserRoleException('Erro, tipo de usuário inválido para serviço.');
-
         }
         $this->owner()->associate($owner);
     }
