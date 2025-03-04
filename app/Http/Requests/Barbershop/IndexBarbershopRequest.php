@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Barbershop;
 
-use App\Enum\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UserIndexRequest extends FormRequest
+class IndexBarbershopRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +23,7 @@ class UserIndexRequest extends FormRequest
     {
         return [
             'search' => 'nullable|string',
-            'role' => ['nullable', Rule::in(UserRole::values())],
-            'sort_by' => 'nullable|in:name,role',
+            'sort_by' => 'nullable|in:name',
             'order' => 'nullable|in:asc,desc'
         ];
     }
@@ -34,7 +31,6 @@ class UserIndexRequest extends FormRequest
     {
         return [
             'search.string' => 'Use apenas palavras na busca.',
-            'role.in' => 'Erro, tipo de usuário inválido.',
             'sort_by.in' => 'Erro, modo de ordenação indisponível.',
             'order.in' => 'Erro, modo de ordenação inválido.'
         ];
