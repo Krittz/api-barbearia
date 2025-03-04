@@ -63,4 +63,61 @@ class BarbershopControllerTest extends TestCase
             ->assertJsonPath('data.1.name', 'Barbearia Do Pedro')
             ->assertJsonPath('data.2.name', 'Barbearia Do João');
     }
+
+    public function test_update_barbershop()
+    {
+        $owner = User::factory()->create(['role' => UserRole::OWNER]);
+
+        $barbershop = Barbershop::factory()->create(['owner_id' => $owner->id]);
+
+        $updateData = [
+            'name' => 'Barbearia do João Atualizada',
+            'address' => 'Nova Rua, 456',
+            'ddd' => '22',
+            'phone' => '888888888',
+        ];
+
+        $response = $this->actingAs($owner)->patchJson("/api/barbershops/{$barbershop->id}", $updateData);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'address',
+                    'phone',
+                    'created_at'
+                ],
+            ])
+            ->assertJsonPath('data.name', 'Barbearia Do João Atualizada')
+            ->assertJsonPath('data.address', 'Nova Rua, 456')
+            ->assertJsonPath('data.phone', '(22) 888888888');
+    }
+
+    public function test_update_barbershop_unauthorized()
+    {
+        // Cria um usuário OWNER
+        $owner = User::factory()->create(['role' => UserRole::OWNER]);
+
+        // Cria outro usuário OWNER
+        $anotherOwner = User::factory()->create(['role' => UserRole::OWNER]);
+
+        // Cria uma barbearia associada ao primeiro OWNER
+        $barbershop = Barbershop::factory()->create(['owner_id' => $owner->id]);
+
+        // Dados de atualização
+        $updateData = [
+            'name' => 'Barbearia do João Atualizada',
+        ];
+
+        // Tenta atualizar a barbearia com outro usuário
+        $response = $this->actingAs($anotherOwner)->patchJson("/api/barbershops/{$barbershop->id}", $updateData);
+
+        // Verifica se a resposta é de não autorizado
+        $response->assertStatus(403)
+            ->assertJson([
+                'status' => 'error',
+                'message' => 'Ação não permitida.',
+            ]);
+    }
 }

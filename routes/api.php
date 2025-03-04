@@ -27,5 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [BarbershopController::class, 'index']);
         Route::post('/', [BarbershopController::class, 'store']);
         Route::get('/{barbershop}', [BarbershopController::class, 'show']);
+        Route::patch('/{barbershop}', [BarbershopController::class, 'update']);
     });
 });
