@@ -24,9 +24,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('/barbershops')->group(function () {
-        Route::get('/', [BarbershopController::class, 'index']);
         Route::post('/', [BarbershopController::class, 'store']);
+        Route::get('/', [BarbershopController::class, 'index']);
         Route::get('/{barbershop}', [BarbershopController::class, 'show']);
         Route::patch('/{barbershop}', [BarbershopController::class, 'update']);
+        Route::delete('/{barbershop}', [BarbershopController::class, 'destroy']);
     });
 });

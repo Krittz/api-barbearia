@@ -120,4 +120,35 @@ class BarbershopControllerTest extends TestCase
                 'message' => 'Ação não permitida.',
             ]);
     }
+    public function test_delete_barbershop()
+    {
+        $owner = User::factory()->create(['role' => UserRole::OWNER]);
+
+        $barbershop = Barbershop::factory()->create(['owner_id' => $owner->id]);
+
+        $response = $this->actingAs($owner)->deleteJson("/api/barbershops/{$barbershop->id}");
+        $response->assertStatus(200)
+            ->assertJson([
+                'status' => 'success',
+                'message' => 'Barbearia excluída com sucesso.',
+            ]);
+
+        $this->assertSoftDeleted($barbershop);
+    }
+    public function test_delete_barbershop_as_admin()
+    {
+        $admin = User::factory()->create(['role' => UserRole::ADMIN]);
+        $owner = User::factory()->create(['role' => UserRole::OWNER]);
+
+        $barbershop = Barbershop::factory()->create(['owner_id' => $owner->id]);
+
+        $response = $this->actingAs($admin)->deleteJson("/api/barbershops/{$barbershop->id}");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'status' => 'success',
+                'message' => 'Barbearia excluída com sucesso.',
+            ]);
+        $this->assertSoftDeleted($barbershop);
+    }
 }

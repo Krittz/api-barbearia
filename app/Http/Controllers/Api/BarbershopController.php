@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Barbershop\DeleteBarbershopAction;
 use App\Actions\Barbershop\IndexBarbershopAction;
 use App\Actions\Barbershop\ShowBarbershopAction;
 use App\Actions\Barbershop\StoreBarbershopAction;
@@ -42,5 +43,14 @@ class BarbershopController extends Controller
         $updatedBarbershop = $action($barbershop, $request->validated());
         return new BarbershopResource($updatedBarbershop);
     }
-    public function destroy() {}
+    public function destroy(DeleteBarbershopAction $action, Barbershop $barbershop)
+    {
+        Gate::authorize('delete', $barbershop);
+        $action($barbershop);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Barbearia excluída com sucesso.',
+        ]);
+    }
+    
 }
