@@ -113,11 +113,7 @@ class ServiceControllerTest extends TestCase
         // Cria um serviço para a barbearia
         $service = Service::factory()->create(['barbershop_id' => $barbershop->id]);
 
-        dump([
-            'customer' => $customer,
-            'barbershop' => $barbershop,
-            'service' => $service
-        ]);
+
         // Faz a requisição para exibir o serviço
         $response = $this->actingAs($customer)->getJson("/api/services/{$service->id}");
 
@@ -140,5 +136,37 @@ class ServiceControllerTest extends TestCase
             ->assertJsonPath('data.id', $service->id)
             ->assertJsonPath('data.name', $service->name)
             ->assertJsonPath('data.barbershop.id', $barbershop->id);
+    }
+    public function test_index_services_for_barbershop()
+    {
+        $customer = User::factory()->create(['role' => UserRole::CUSTOMER]);
+
+        $barbershop = Barbershop::factory()->create();
+
+        $services = Service::factory()->count(3)->create(['barbershop_id' => $barbershop->id]);
+
+        $response = $this->actingAs($customer)->getJson("/api/services/{$barbershop->id}/services");
+
+     
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'description',
+                        'price',
+                        'duration',
+                        'barbershop' => [
+                            'id',
+                            'name',
+                        ],
+                        'created_at',
+                    ],
+                ],
+                'links',
+                'meta',
+            ])
+            ->assertJsonCount(3, 'data');
     }
 }
