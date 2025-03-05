@@ -13,8 +13,6 @@ use App\Http\Requests\Barbershop\StoreBarbershopRequest;
 use App\Http\Requests\Barbershop\UpdateBarbershopRequest;
 use App\Http\Resources\BarbershopResource;
 use App\Models\Barbershop;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class BarbershopController extends Controller
@@ -52,5 +50,4 @@ class BarbershopController extends Controller
             'message' => 'Barbearia excluída com sucesso.',
         ]);
     }
-    
 }

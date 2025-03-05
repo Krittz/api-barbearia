@@ -30,11 +30,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{barbershop}', [BarbershopController::class, 'show']);
         Route::patch('/{barbershop}', [BarbershopController::class, 'update']);
         Route::delete('/{barbershop}', [BarbershopController::class, 'destroy']);
+        Route::get('/{barbershop}/services', [ServiceController::class, 'index']);
     });
 
     Route::prefix('/services')->group(function () {
         Route::post('/', [ServiceController::class, 'store']);
         Route::get('/{service}', [ServiceController::class, 'show']);
-        Route::get('/{barbershop}/services', [ServiceController::class, 'index']);
+        Route::patch('/{service}', [ServiceController::class, 'update']);
+        Route::delete('/{service}', [ServiceController::class, 'destroy']);
     });
 });
