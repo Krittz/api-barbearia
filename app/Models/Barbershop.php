@@ -63,4 +63,8 @@ class Barbershop extends Model
             set: fn($value) => preg_replace('/[^0-9]/', '', $value),
         );
     }
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
 }

@@ -34,5 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('/services')->group(function () {
         Route::post('/', [ServiceController::class, 'store']);
+        Route::get('/{service}', [ServiceController::class, 'show']);
+        Route::get('/{barbershop}/services', [ServiceController::class, 'index']);
     });
 });

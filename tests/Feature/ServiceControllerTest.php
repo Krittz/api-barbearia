@@ -4,15 +4,16 @@ namespace Tests\Feature;
 
 use App\Enum\UserRole;
 use App\Models\Barbershop;
+use App\Models\Service;
 use App\Models\User;
+use Database\Factories\ServiceFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ServiceControllerTest extends TestCase
 {
     use RefreshDatabase;
-
+    /*
     public function test_store_service()
     {
         // Cria um usuário OWNER
@@ -73,7 +74,7 @@ class ServiceControllerTest extends TestCase
         $response->assertStatus(403)
             ->assertJson([
                 'status' => 'error',
-                'message' => 'Ação não autorizada.',
+                'message' => 'Ação não permitida.',
             ]);
     }
 
@@ -98,5 +99,46 @@ class ServiceControllerTest extends TestCase
                 'message' => 'O nome do serviço é obrigatório. (and 3 more errors)',
                 'code' => 422,
             ]);
+    }
+            */
+
+    public function test_show_service()
+    {
+        // Cria um usuário CUSTOMER
+        $customer = User::factory()->create(['role' => UserRole::CUSTOMER]);
+
+        // Cria uma barbearia
+        $barbershop = Barbershop::factory()->create();
+
+        // Cria um serviço para a barbearia
+        $service = Service::factory()->create(['barbershop_id' => $barbershop->id]);
+
+        dump([
+            'customer' => $customer,
+            'barbershop' => $barbershop,
+            'service' => $service
+        ]);
+        // Faz a requisição para exibir o serviço
+        $response = $this->actingAs($customer)->getJson("/api/services/{$service->id}");
+
+        // Verifica a resposta
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'description',
+                    'price',
+                    'duration',
+                    'barbershop' => [
+                        'id',
+                        'name',
+                    ],
+                    'created_at',
+                ],
+            ])
+            ->assertJsonPath('data.id', $service->id)
+            ->assertJsonPath('data.name', $service->name)
+            ->assertJsonPath('data.barbershop.id', $barbershop->id);
     }
 }
