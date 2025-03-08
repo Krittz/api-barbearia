@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\BarbershopController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 

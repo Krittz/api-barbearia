@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Service extends Model
 {
-    /** @use HasFactory<\Database\Factories\ServiceFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [

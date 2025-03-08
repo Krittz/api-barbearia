@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 
 class IndexUserAction
 {
-    /**
-     * Create a new class instance.
-     */
     public function __invoke(Request $request)
     {
         $query = User::query();
