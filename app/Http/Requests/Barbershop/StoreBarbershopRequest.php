@@ -19,8 +19,7 @@ class StoreBarbershopRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'ddd' => 'required|string|size:2|regex:/^\d{2}$/',
-            'phone' => 'required|string|size:9|regex:/^\d{9}$/'
+            'phone' => 'required|phone:BR'
         ];
     }
     public function messages()
@@ -28,10 +27,8 @@ class StoreBarbershopRequest extends FormRequest
         return [
             'name.required' => 'O nome é obrigatório.',
             'address.required' => 'O endereço é obrigatório.',
-            'ddd.required' => 'O DDD é obrigatório.',
-            'ddd.size' => 'O DDD deve ter 2 dígitos.',
             'phone.required' => 'O telefone é obrigatório.',
-            'phone.size' => 'O telefone deve ter 9 dígitos.'
+            'phone.phone' => 'O telefone informado não é válido.'
         ];
     }
 }

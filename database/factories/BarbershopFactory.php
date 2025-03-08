@@ -21,8 +21,7 @@ class BarbershopFactory extends Factory
         return [
             'name' => fake()->company(), // Nome da barbearia
             'address' => fake()->address(), // Endereço
-            'ddd' => fake()->numerify('##'), // DDD (2 dígitos)
-            'phone' => fake()->numerify('#########'), // Telefone (9 dígitos)
+            'phone' => fake()->numerify('###########'), // Telefone (11 dígitos)
             'owner_id' => User::factory()->create(['role' => UserRole::OWNER])->id, // Cria um usuário OWNER e usa o ID
         ];
     }

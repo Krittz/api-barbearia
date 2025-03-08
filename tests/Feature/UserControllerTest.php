@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class UserControllerTest extends TestCase
 {
-    /*
+
     use RefreshDatabase;
 
     public function test_store_user()
@@ -119,7 +119,6 @@ class UserControllerTest extends TestCase
 
     public function test_store_user_validation_errors()
     {
-        // Testando campo 'name' obrigatório
         $response = $this->postJson('/api/users', [
             'email' => 'john@example.com',
             'password' => 'password123',
@@ -133,7 +132,6 @@ class UserControllerTest extends TestCase
                 'message' => 'O nome é obrigatório.',
             ]);
 
-        // Testando campo 'email' inválido
         $response = $this->postJson('/api/users', [
             'name' => 'John Doe',
             'email' => 'invalid-email',
@@ -148,7 +146,6 @@ class UserControllerTest extends TestCase
                 'message' => 'O e-mail deve ser um endereço de e-mail válido.',
             ]);
 
-        // Testando campo 'password' com menos de 8 caracteres
         $response = $this->postJson('/api/users', [
             'name' => 'John Doe',
             'email' => 'john@example.com',
@@ -163,7 +160,6 @@ class UserControllerTest extends TestCase
                 'message' => 'A senha deve ter pelo menos 8 caracteres.',
             ]);
 
-        // Testando campo 'role' inválido
         $response = $this->postJson('/api/users', [
             'name' => 'John Doe',
             'email' => 'john@example.com',
@@ -183,7 +179,6 @@ class UserControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // Testando campo 'email' inválido
         $response = $this->actingAs($user)->patchJson("/api/users/{$user->id}", [
             'email' => 'invalid-email',
         ]);
@@ -194,7 +189,6 @@ class UserControllerTest extends TestCase
                 'message' => 'O e-mail deve ser um endereço de e-mail válido.',
             ]);
 
-        // Testando campo 'password' com menos de 8 caracteres
         $response = $this->actingAs($user)->patchJson("/api/users/{$user->id}", [
             'password' => '123',
             'password_confirmation' => '123',
@@ -211,7 +205,6 @@ class UserControllerTest extends TestCase
     {
         $user = User::factory()->create(['role' => UserRole::CUSTOMER->value]);
 
-        // Tentando acessar a lista de usuários sem ser admin
         $response = $this->actingAs($user)->getJson('/api/users');
 
         $response->assertStatus(403)
@@ -223,7 +216,6 @@ class UserControllerTest extends TestCase
     }
     public function test_authentication_exception()
     {
-        // Tentando acessar uma rota protegida sem autenticação
         $response = $this->getJson('/api/users');
 
         $response->assertStatus(401)
@@ -239,7 +231,6 @@ class UserControllerTest extends TestCase
         $user = User::factory()->create(['role' => UserRole::CUSTOMER->value]);
         $anotherUser = User::factory()->create();
 
-        // Tentando atualizar outro usuário sem permissão
         $response = $this->actingAs($user)->patchJson("/api/users/{$anotherUser->id}", [
             'name' => 'Jane Doe',
         ]);
@@ -254,10 +245,9 @@ class UserControllerTest extends TestCase
 
     public function test_index_pagination()
     {
-        User::factory()->count(14)->create(); // Cria 15 usuários
+        User::factory()->count(14)->create();
         $admin = User::factory()->create(['role' => UserRole::ADMIN->value]);
 
-        // Testa a primeira página
         $response = $this->actingAs($admin)->getJson('/api/users?page=1');
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -273,12 +263,11 @@ class UserControllerTest extends TestCase
                 'links',
                 'meta',
             ])
-            ->assertJsonCount(10, 'data'); // Verifica se retornou 10 itens na primeira página
+            ->assertJsonCount(10, 'data');
 
-        // Testa a segunda página
         $response = $this->actingAs($admin)->getJson('/api/users?page=2');
         $response->assertStatus(200)
-            ->assertJsonCount(5, 'data'); // Verifica se retornou os 5 itens restantes
+            ->assertJsonCount(5, 'data');
     }
 
 
@@ -287,15 +276,12 @@ class UserControllerTest extends TestCase
         $user = User::factory()->create();
         $admin = User::factory()->create(['role' => UserRole::ADMIN->value]);
 
-        // Deleta o usuário
         $this->actingAs($admin)->deleteJson("/api/users/{$user->id}");
 
-        // Verifica se o usuário não aparece na listagem
         $response = $this->actingAs($admin)->getJson('/api/users');
         $response->assertStatus(200)
             ->assertJsonMissing(['id' => $user->id]);
 
-        // Verifica se o usuário ainda existe no banco de dados
         $this->assertDatabaseHas('users', ['id' => $user->id])
             ->assertNotNull(User::withTrashed()->find($user->id)->deleted_at);
     }
@@ -310,8 +296,8 @@ class UserControllerTest extends TestCase
             ->assertJson([
                 'data' => [
                     'id' => $user->id,
-                    'name' => 'John Doe', // Nome não foi alterado
-                    'email' => 'john.doe@example.com', // Email foi atualizado
+                    'name' => 'John Doe',
+                    'email' => 'john.doe@example.com',
                 ],
             ]);
     }
@@ -320,7 +306,6 @@ class UserControllerTest extends TestCase
         $user1 = User::factory()->create(['email' => 'user1@example.com']);
         $user2 = User::factory()->create(['email' => 'user2@example.com']);
 
-        // Tenta atualizar o email do user1 para o email do user2
         $response = $this->actingAs($user1)->patchJson("/api/users/{$user1->id}", [
             'email' => 'user2@example.com',
         ]);
@@ -336,7 +321,6 @@ class UserControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // Tenta acessar a listagem de usuários sem autenticação
         $response = $this->getJson('/api/users');
 
         $response->assertStatus(401)
@@ -399,10 +383,8 @@ class UserControllerTest extends TestCase
         $user = User::factory()->create();
         $admin = User::factory()->create(['role' => UserRole::ADMIN->value]);
 
-        // Deleta o usuário
         $this->actingAs($admin)->deleteJson("/api/users/{$user->id}");
 
-        // Tenta deletar novamente
         $response = $this->actingAs($admin)->deleteJson("/api/users/{$user->id}");
 
         $response->assertStatus(404)
@@ -433,7 +415,6 @@ class UserControllerTest extends TestCase
         $user = User::factory()->create(['role' => UserRole::CUSTOMER->value]);
         $anotherUser = User::factory()->create();
 
-        // Tenta deletar outro usuário sem ser admin
         $response = $this->actingAs($user)->deleteJson("/api/users/{$anotherUser->id}");
 
         $response->assertStatus(403)
@@ -445,15 +426,12 @@ class UserControllerTest extends TestCase
     }
     public function test_index_order_by_name()
     {
-        // Cria 3 usuários, sendo que o primeiro já é um admin
         User::factory()->create(['name' => 'Zebra', 'role' => UserRole::ADMIN->value]);
         User::factory()->create(['name' => 'Apple']);
         User::factory()->create(['name' => 'Banana']);
 
-        // Recupera o admin para autenticar
         $admin = User::where('role', UserRole::ADMIN->value)->first();
 
-        // Ordena por nome
         $response = $this->actingAs($admin)->getJson('/api/users?order_by=name&order=asc');
         $response->assertStatus(200)
             ->assertJsonPath('data.0.name', 'Apple')
@@ -467,10 +445,8 @@ class UserControllerTest extends TestCase
         User::factory()->count(5)->create(['role' => UserRole::CUSTOMER->value]);
         User::factory()->count(3)->create(['role' => UserRole::ADMIN->value]);
         $admin = User::factory()->create(['role' => UserRole::ADMIN->value]);
-        // Filtra por role 'admin'
         $response = $this->actingAs($admin)->getJson('/api/users?role=admin');
         $response->assertStatus(200)
-            ->assertJsonCount(4, 'data'); // 3 admins + 1 admin autenticado
+            ->assertJsonCount(4, 'data');
     }
-    */
 }

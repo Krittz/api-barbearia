@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateBarbershopRequest extends FormRequest
 {
-   
+
     public function authorize(): bool
     {
         return true;
@@ -17,8 +17,7 @@ class UpdateBarbershopRequest extends FormRequest
         return [
             'name' => 'sometimes|string|max:255',
             'address' => 'sometimes|string|max:255',
-            'ddd' => 'sometimes|string|size:2|regex:/^\d{2}$/',
-            'phone' => 'sometimes|string|size:9|regex:/^\d{9}$/'
+            'phone' => 'sometimes|phone:BR'
         ];
     }
     public function messages()
@@ -28,10 +27,7 @@ class UpdateBarbershopRequest extends FormRequest
             'name.max' => 'O nome não pode ter mais de 255 caracteres.',
             'address.string' => 'Formato de endereço inválido.',
             'address.max' => 'O endereço não pode ter mais de 255 caracteres.',
-            'ddd.size' => 'O DDD deve ter 2 digitos.',
-            'ddd.regex' => 'O DDD deve conter apenas números.',
-            'phone.size' => 'O telefone deve ter 9 dígitos.',
-            'phone.regex' => 'O telefone deve conter apenas números.',
+            'phone.phone' => 'O telefone informado não é válido.'
         ];
     }
 }

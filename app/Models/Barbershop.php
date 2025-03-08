@@ -16,12 +16,10 @@ class Barbershop extends Model
     protected $fillable = [
         'name',
         'address',
-        'ddd',
         'phone',
         'owner_id'
     ];
     protected $casts = [
-        'ddd' => 'string',
         'phone' => 'string',
     ];
     public function setOwner(User $owner)
@@ -50,13 +48,6 @@ class Barbershop extends Model
         );
     }
     protected function phone(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => $value,
-            set: fn($value) => preg_replace('/[^0-9]/', '', $value),
-        );
-    }
-    protected function ddd(): Attribute
     {
         return Attribute::make(
             get: fn($value) => $value,

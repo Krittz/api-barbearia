@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('address');
-            $table->string('ddd', 2);
-            $table->string('phone', 9);
+            $table->string('phone', 11);
             $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();

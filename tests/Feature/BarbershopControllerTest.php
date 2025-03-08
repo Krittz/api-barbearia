@@ -11,15 +11,13 @@ use Tests\TestCase;
 class BarbershopControllerTest extends TestCase
 {
     use RefreshDatabase;
-/*
     public function test_store_barbershop()
     {
         $owner = User::factory()->create(['role' => UserRole::OWNER]);
         $response = $this->actingAs($owner)->postJson('/api/barbershops', [
             'name' => 'barbearia do joão',
             'address' => 'rua das flores, 123',
-            'ddd' => '11',
-            'phone' => '999999999',
+            'phone' => '11999999999',
         ]);
 
         $response->assertStatus(201)
@@ -73,12 +71,10 @@ class BarbershopControllerTest extends TestCase
         $updateData = [
             'name' => 'Barbearia do João Atualizada',
             'address' => 'Nova Rua, 456',
-            'ddd' => '22',
-            'phone' => '888888888',
+            'phone' => '11999576845',
         ];
 
         $response = $this->actingAs($owner)->patchJson("/api/barbershops/{$barbershop->id}", $updateData);
-
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
@@ -91,29 +87,23 @@ class BarbershopControllerTest extends TestCase
             ])
             ->assertJsonPath('data.name', 'Barbearia Do João Atualizada')
             ->assertJsonPath('data.address', 'Nova Rua, 456')
-            ->assertJsonPath('data.phone', '(22) 888888888');
+            ->assertJsonPath('data.phone', '11999576845');
     }
 
     public function test_update_barbershop_unauthorized()
     {
-        // Cria um usuário OWNER
         $owner = User::factory()->create(['role' => UserRole::OWNER]);
 
-        // Cria outro usuário OWNER
         $anotherOwner = User::factory()->create(['role' => UserRole::OWNER]);
 
-        // Cria uma barbearia associada ao primeiro OWNER
         $barbershop = Barbershop::factory()->create(['owner_id' => $owner->id]);
 
-        // Dados de atualização
         $updateData = [
             'name' => 'Barbearia do João Atualizada',
         ];
 
-        // Tenta atualizar a barbearia com outro usuário
         $response = $this->actingAs($anotherOwner)->patchJson("/api/barbershops/{$barbershop->id}", $updateData);
 
-        // Verifica se a resposta é de não autorizado
         $response->assertStatus(403)
             ->assertJson([
                 'status' => 'error',
@@ -151,5 +141,4 @@ class BarbershopControllerTest extends TestCase
             ]);
         $this->assertSoftDeleted($barbershop);
     }
-        */
 }

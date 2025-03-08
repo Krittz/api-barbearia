@@ -26,7 +26,7 @@ class ServiceController extends Controller
     public function store(StoreServiceRequest $request, StoreServiceAction $action)
     {
         $validated = $request->validated();
-        Gate::authorize('store', Service::class);
+        Gate::authorize('store', [Service::class, $validated]);
         $service = $action($validated);
         return new ServiceResource($service);
     }
