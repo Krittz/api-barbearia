@@ -4,17 +4,19 @@ namespace App\Policies;
 
 use App\Enum\UserRole;
 use App\Exceptions\UnauthorizedException;
+use App\Models\Barbershop;
 use App\Models\Service;
 use App\Models\User;
 
 class ServicePolicy
 {
-    public function store(User $user): bool
+    public function store(User $user, array $data): bool
     {
-        if ($user->role !== UserRole::OWNER && $user->role !== UserRole::ADMIN) {
-            throw new UnauthorizedException('Ação não permitida.');
+        $barbershop = Barbershop::findOrFail($data['barbershop_id']);
+        if ($user->role === UserRole::ADMIN || $user->id === $barbershop->owner_id) {
+            return true;
         }
-        return true;
+        throw new UnauthorizedException('Ação não permitida.');
     }
 
     public function update(User $user, Service $service)
